@@ -6,7 +6,7 @@ export default function Header() {
             {/* Navigation */}
             <nav>
                 <Link className="home" to="/">
-                    <img src="./images/logo.png" alt="logo" />
+                    <img src="/images/logo.png" alt="logo" />
                 </Link>
                 <Link to="/games">Catalog</Link>
                 {/* Logged-in users */}
