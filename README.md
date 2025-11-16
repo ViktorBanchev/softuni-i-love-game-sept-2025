@@ -11,5 +11,7 @@
 - [x] Setup react-router
     - [x] Add BrowserRouter component
     - [x] Add Routes
-- [ ] Dynamic navigation
+- [x] Dynamic navigation
     - [x] Replace `<a>` tags in header with `<Link>`
+- [x] catalog page
+- [x] fetch all games
