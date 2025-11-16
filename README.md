@@ -12,4 +12,4 @@
     - [x] Add BrowserRouter component
     - [x] Add Routes
 - [ ] Dynamic navigation
- - [x] Replace `<a>` tags in header with `<Link>`
+    - [x] Replace `<a>` tags in header with `<Link>`
