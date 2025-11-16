@@ -15,3 +15,4 @@
     - [x] Replace `<a>` tags in header with `<Link>`
 - [x] catalog page
 - [x] fetch all games
+- [x] Dynamic home latest games
