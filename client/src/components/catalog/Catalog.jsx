@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Game from "../game/Game.jsx";
+import Game from "../game-card/GameCard.jsx";
 
 const API_URL = 'http://localhost:3030/jsonstore/games'
 
