@@ -12,14 +12,13 @@ export default function GameCreate() {
         data.players = Number(data.players);
         data._createdOn = Date.now();
 
-        const response = await fetch('http://localhost:3030/jsonstore/games', {
+        await fetch('http://localhost:3030/jsonstore/games', {
             method: "POST",
             headers: {
                 "content-type":"application/json"
             },
             body: JSON.stringify(data)
         });
-        const result = response.json();
         navigate("/games");
     }
 
