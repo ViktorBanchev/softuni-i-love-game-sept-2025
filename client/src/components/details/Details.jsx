@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
-
-const BASE_URL = 'http://localhost:3030/jsonstore/games';
+import request from "../../utils/requester.js";
 
 export default function Details() {
     const navigate = useNavigate()
@@ -9,8 +8,7 @@ export default function Details() {
     const [game, setGame] = useState({})
 
     useEffect(() => {
-        fetch(`${BASE_URL}/${gameId}`)
-            .then(response => response.json())
+        request(`games/${gameId}`)
             .then(result => setGame(result))
             .catch(err => alert(err.message))
     }, [gameId])
@@ -22,9 +20,7 @@ export default function Details() {
             return;
         }
         try {
-            await fetch(`${BASE_URL}/${gameId}`, {
-                method: 'DELETE',
-            });
+            await request(`games/${gameId}`, 'DELETE');
             navigate("/games")
         } catch (error) {
             alert('Unable to delete game: ', error.message)

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Game from "../game-card/GameCard.jsx";
-
-const API_URL = 'http://localhost:3030/jsonstore/games'
+import request from "../../utils/requester.js";
 
 export default function Catalog() {
     const [games, setGames] = useState([]);
@@ -9,9 +8,7 @@ export default function Catalog() {
     useEffect(() => {
         (async () => {
             try {
-                const response = await fetch(API_URL);
-                const result = await response.json();
-
+                const result = await request(`games`);
                 setGames(Object.values(result));
             } catch (error) {
                 alert(error.message)

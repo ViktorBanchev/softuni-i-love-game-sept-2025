@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import request from "../../utils/requester.js";
 
 const initialValues = {
     title: '',
@@ -23,8 +24,7 @@ export default function Edit() {
     };
 
     useEffect(() => {
-        fetch(`http://localhost:3030/jsonstore/games/${gameId}`)
-            .then(response => response.json())
+        request(`games/${gameId}`)
             .then(result => {
                 setValues(result)
             })
@@ -33,9 +33,15 @@ export default function Edit() {
             })
     }, [gameId])
 
+    const editGameAction = async (formData) => {
+        const gameData = Object.fromEntries(formData);
+
+        request(`games/${gameId}`, 'PATCH', gameData)
+    }
+
     return (
         <section id="edit-page">
-            <form id="add-new-game">
+            <form id="add-new-game" action={editGameAction}>
                 <div className="container">
                     <h1>Edit Game</h1>
                     <div className="form-group-half">
