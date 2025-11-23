@@ -1,9 +1,31 @@
+import { useNavigate } from "react-router";
+
 export default function Login({
     onLogin,
 }) {
+    const navigate = useNavigate()
+
+    const submitAction = (formData) => {
+        const email = formData.get('email');
+        const password = formData.get('password');
+
+        if (!email || !password) {
+            return alert('Email and password are required!');
+        }
+
+        try {
+            onLogin(email, password);
+            
+            navigate("/");
+        } catch (error) {
+            alert(error.message)
+        }
+
+    }
+
     return (
         <section id="login-page">
-            <form id="login">
+            <form id="login" action={submitAction}>
                 <div className="container">
                     <h1>Login</h1>
                     <label htmlFor="email">Email</label>
