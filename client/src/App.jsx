@@ -15,7 +15,6 @@ import Edit from "./components/edit/Edit.jsx"
 
 function App() {
     const [registeredUsers, setRegisteredUsers] = useState([]);
-    // eslint-disable-next-line no-unused-vars
     const [user, setUser] = useState(null);
 
     const registerHandler = (email, password) => {
@@ -50,7 +49,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/games" element={<Catalog />} />
-                <Route path="/games/:gameId/details" element={<Details />} />
+                <Route path="/games/:gameId/details" element={<Details user={user} />} />
                 <Route path="/games/:gameId/edit" element={<Edit />} />
                 <Route path="/games/create" element={<GameCreate />} />
                 <Route path="/register" element={<Register onRegister={registerHandler} />} />
