@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router";
 
 const initialValues = {
     title: '',
@@ -10,15 +11,27 @@ const initialValues = {
 }
 
 export default function Edit() {
+    const { gameId } = useParams();
     const [values, setValues] = useState(initialValues);
 
     const changeHandler = (e) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         setValues(state => ({
             ...state,
             [name]: value
         }))
     };
+
+    useEffect(() => {
+        fetch(`http://localhost:3030/jsonstore/games/${gameId}`)
+            .then(response => response.json())
+            .then(result => {
+                setValues(result)
+            })
+            .catch(err => {
+                alert(err.message)
+            })
+    }, [gameId])
 
     return (
         <section id="edit-page">
@@ -32,7 +45,7 @@ export default function Edit() {
                             id="gameName"
                             name="title"
                             onChange={changeHandler}
-                            value={values.name}
+                            value={values.title}
                             placeholder="Enter game title..."
                         />
                     </div>
