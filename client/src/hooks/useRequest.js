@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import UserContext from "../contexts/UserContext.js";
+import UserContext from "../contexts/UserContext.jsx";
 
 const baseUrl = 'http://localhost:3030'
 export default function useRequest() {
