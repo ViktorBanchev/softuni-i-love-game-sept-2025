@@ -7,9 +7,10 @@ import DetailsComments from "./details-comments/DetailsComments.jsx";
 export default function Details({
     user
 }) {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const { gameId } = useParams();
-    const [game, setGame] = useState({})
+    const [game, setGame] = useState({});
+    const [refresh, setRefresh] = useState(false);
 
     useEffect(() => {
         request(`games/${gameId}`)
@@ -30,6 +31,10 @@ export default function Details({
             alert('Unable to delete game: ', error.message)
         }
 
+    }
+
+    const refreshHandler = () => {
+        setRefresh(state => !state);
     }
 
     return (
@@ -73,11 +78,11 @@ export default function Details({
 
                     <button className="button" onClick={deleteClickHandler}>Delete</button>
                 </div>
-                <DetailsComments />
+                <DetailsComments refresh={refresh} />
             </div>
 
-            {user && <CreateComment user={user} />}
-            
+            {user && <CreateComment user={user} onCreate={refreshHandler} />}
+
         </section>
     );
 }

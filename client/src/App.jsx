@@ -12,39 +12,41 @@ import Register from "./components/register/Register.jsx"
 import Login from "./components/login/Login.jsx"
 import Logout from "./components/logout/Logout.jsx"
 import Edit from "./components/edit/Edit.jsx"
+import UserContext from "./contexts/UserContext.js"
+import useRequest from "./hooks/useRequest.js"
 
 function App() {
-    const [registeredUsers, setRegisteredUsers] = useState([]);
     const [user, setUser] = useState(null);
+    const { request } = useRequest();
 
-    const registerHandler = (email, password) => {
-        if (registeredUsers.some(user => user.email === email)) {
-            throw new Error("Email is taken");
-        }
-
+    const registerHandler = async (email, password) => {
         const newUser = { email, password };
-        
-        setRegisteredUsers(state => [...state, newUser]);
-        
-        setUser(newUser);
 
+        //TODO: Register API call
+        const result = await request('/users/register', 'POST', newUser);
+        setUser(result);
     }
 
-    const loginHandler = (email, password) => {
-        const user = registeredUsers.find(u => u.email === email && u.password === password);
-        if (!user) {
-            throw new Error('Ivalid user or password!');
-        }
-
-        setUser(user);
+    const loginHandler = async (email, password) => {
+        const result = await request('/users/login', 'POST', { email, password });
+        setUser(result);
     }
 
     const logoutHandler = () => {
-        setUser(null);
+        return request('/users/logout')
+            .finally(() => setUser(null))
+    }
+
+    const userContextValues = {
+        user,
+        isAuthenticated: !!user?.accessToken,
+        loginHandler,
+        logoutHandler,
+        registerHandler,
     }
 
     return (
-        <>
+        <UserContext.Provider value={userContextValues}>
             <Header />
             <Routes>
                 <Route path="/" element={<Home />} />
@@ -52,13 +54,13 @@ function App() {
                 <Route path="/games/:gameId/details" element={<Details user={user} />} />
                 <Route path="/games/:gameId/edit" element={<Edit />} />
                 <Route path="/games/create" element={<GameCreate />} />
-                <Route path="/register" element={<Register onRegister={registerHandler} />} />
+                <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login onLogin={loginHandler} />} />
                 <Route path="/logout" element={<Logout onLogout={logoutHandler} />} />
             </Routes>
 
             <Footer />
-        </>
+        </UserContext.Provider>
     )
 }
 

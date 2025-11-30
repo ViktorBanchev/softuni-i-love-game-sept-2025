@@ -3,7 +3,8 @@ import request from "../../../utils/requester.js";
 import { useParams } from "react-router";
 
 export default function CreateComment({
-    user
+    user,
+    onCreate
 }) {
     const { gameId } = useParams();
     const [comment, setComment] = useState('');
@@ -13,11 +14,17 @@ export default function CreateComment({
     }
 
     const submitHandler = async () => {
-        await request('/comments', 'POST', {
-            author: user.email, 
-            message: comment,
-            gameId,
-        })
+        try {
+            await request('/comments', 'POST', {
+                author: user.email,
+                message: comment,
+                gameId,
+            })
+            setComment('')
+            onCreate();         
+        } catch(err) {
+            alert(err.message);
+        }
     }
 
     //TODO: Add Comment ( Only for logged-in users, which is not creators of the current game )
@@ -26,17 +33,17 @@ export default function CreateComment({
         <article className="create-comment">
             <label>Add new comment:</label>
             <form className="form" action={submitHandler}>
-                <textarea 
-                    name="comment" 
+                <textarea
+                    name="comment"
                     onChange={changeHandler}
                     value={comment}
                     placeholder="Comment......"
-                    />
-                <input 
-                    className="btn submit" 
-                    type="submit" 
+                />
+                <input
+                    className="btn submit"
+                    type="submit"
                     defaultValue="Add Comment"
-                    disabled={!user} 
+                    disabled={!user}
                 />
             </form>
         </article>
