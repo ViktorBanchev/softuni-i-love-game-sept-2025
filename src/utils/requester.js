@@ -1,4 +1,4 @@
-const base_url = 'http://localhost:3030/jsonstore'
+const base_url = 'http://127.0.0.1:5001/i-love-games-sept2025/us-central1/server/jsonstore'
 
 export default async function request(url, method, data) {
     let options = {};
