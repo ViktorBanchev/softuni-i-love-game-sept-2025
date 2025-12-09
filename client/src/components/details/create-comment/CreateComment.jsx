@@ -1,42 +1,46 @@
-import { useState } from "react";
-import request from "../../../utils/requester.js";
 import { useParams } from "react-router";
+import useRequest from "../../../hooks/useRequest.js";
+import useForm from "../../../hooks/useForm.js";
+import {v4 as uuid} from 'uuid'
 
 export default function CreateComment({
     user,
-    onCreate
+    onCreateStart,
+    onCreateEnd,
 }) {
     const { gameId } = useParams();
-    const [comment, setComment] = useState('');
+    const { request } = useRequest();
 
-    const changeHandler = (e) => {
-        setComment(e.target.value)
-    }
+    const submitHandler = async ({ comment }) => {
+        const data = {
+            _id: uuid(),
+            message: comment,
+            gameId,
+        }
+        onCreateStart(data)
 
-    const submitHandler = async () => {
         try {
-            await request('/comments', 'POST', {
-                author: user.email,
-                message: comment,
-                gameId,
-            })
-            setComment('')
-            onCreate();         
-        } catch(err) {
+            const createdComment = await request('/data/comments', 'POST', data)
+
+            onCreateEnd(createdComment);
+        } catch (err) {
             alert(err.message);
         }
     }
 
     //TODO: Add Comment ( Only for logged-in users, which is not creators of the current game )
 
+    const {
+        register,
+        formAction
+    } = useForm(submitHandler, { comment: '' })
+
     return (
         <article className="create-comment">
             <label>Add new comment:</label>
-            <form className="form" action={submitHandler}>
+            <form className="form" action={formAction}>
                 <textarea
-                    name="comment"
-                    onChange={changeHandler}
-                    value={comment}
+                    {...register('comment')}
                     placeholder="Comment......"
                 />
                 <input

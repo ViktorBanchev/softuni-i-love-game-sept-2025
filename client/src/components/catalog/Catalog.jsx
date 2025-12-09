@@ -1,21 +1,8 @@
-import { useEffect, useState } from "react";
 import Game from "../game-card/GameCard.jsx";
-import request from "../../utils/requester.js";
+import useRequest from "../../hooks/useRequest.js";
 
 export default function Catalog() {
-    const [games, setGames] = useState([]);
-
-    useEffect(() => {
-        (async () => {
-            try {
-                const result = await request(`games`);
-                setGames(Object.values(result));
-            } catch (error) {
-                alert(error.message)
-            }
-        })();
-    }, [])
-
+    const { data: games } = useRequest('/data/games', []);
 
     return (
         <section id="catalog-page">

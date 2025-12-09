@@ -1,47 +1,39 @@
 import { useNavigate } from "react-router";
-import request from "../../utils/requester.js";
-import { useEffect, useState } from "react";
-import {ref} from 'firebase/storage'
+import useForm from "../../hooks/useForm.js";
+import useRequest from "../../hooks/useRequest.js";
 
 export default function GameCreate() {
     const navigate = useNavigate();
-    const [imageUpload, setImageUpload] = useState(false);
-    const [imagePreview, setImagePreview] = useState(null);
+    const { request } = useRequest();
 
-    useEffect(() => {
-        return () => {
-            URL.revokeObjectURL(imagePreview);
-            setImagePreview(null);
-        }
-    }, [imageUpload, imagePreview])
-
-    const createGameHandler = async (ev) => {
-        ev.preventDefault();
-
-        const formData = new FormData(ev.target);
-        const {image, ...data} = Object.fromEntries(formData);
-
-        data.imageUrl = image;
+    const createGameHandler = async (values) => {
+        const data = values;
+        
         data.players = Number(data.players);
-        data._createdOn = Date.now();
 
-        await request('games', 'POST', data);
-        navigate("/games");
+        try {
+            await request('/data/games', 'POST', data);
+            navigate("/games");
+        } catch (error) {
+            alert(error.message);
+        }
     }
 
-    const imageChangeHandler = (e) => {
-        const image = e.target.files[0];
-        const imageUrl = URL.createObjectURL(image);
-        setImagePreview(imageUrl);
-    }
-
-    const imageUploadClickHandler = () => {
-        setImageUpload(state => !state);
-    }
+    const {
+        register,
+        formAction
+    } = useForm(createGameHandler, {
+        title: '',
+        genre: '',
+        players: '',
+        date: '',
+        imageUrl: '',
+        summary: '',
+    })
 
     return (
         <section id="add-page">
-            <form id="add-new-game" onSubmit={createGameHandler}>
+            <form id="add-new-game" action={formAction}>
                 <div className="container">
                     <h1>Add New Game</h1>
                     <div className="form-group-half">
@@ -49,7 +41,7 @@ export default function GameCreate() {
                         <input
                             type="text"
                             id="gameName"
-                            name="title"
+                            {...register('title')}
                             placeholder="Enter game title..."
                         />
                     </div>
@@ -58,7 +50,7 @@ export default function GameCreate() {
                         <input
                             type="text"
                             id="genre"
-                            name="genre"
+                            {...register('genre')}
                             placeholder="Enter game genre..."
                         />
                     </div>
@@ -67,36 +59,28 @@ export default function GameCreate() {
                         <input
                             type="number"
                             id="activePlayers"
-                            name="players"
+                            {...register('players')}
                             min={0}
                             placeholder={0}
                         />
                     </div>
                     <div className="form-group-half">
                         <label htmlFor="releaseDate">Release Date:</label>
-                        <input type="date" id="releaseDate" name="date" />
+                        <input type="date" id="releaseDate" {...register('date')} />
                     </div>
                     <div className="form-group-full">
-                        <label htmlFor="image">{imageUpload ? 'Image Upload' : 'Image Url'}:</label>
-                        <button type="button" className='details-button' onClick={imageUploadClickHandler}>{imageUpload ? 'Image Url' : 'Image Upload'}</button>
-                        {imageUpload
-                            ? <input type="file" id="image" name="image" placeholder="Upload File" onChange={imageChangeHandler} />
-                            : <input type="text" id="image" name="image" placeholder="Enter image URL..." />
-                        }
+                        <label htmlFor="image">'Image Upload' : 'Image Url'</label>
 
-                        {imagePreview && (
-                            <img src={imagePreview} alt="preview image" />
-                        )}
+                        <input type="text" id="image" {...register('imageUrl')} placeholder="Enter image URL..." />
 
                     </div>
                     <div className="form-group-full">
                         <label htmlFor="summary">Summary:</label>
                         <textarea
-                            name="summary"
+                            {...register('summary')}
                             id="summary"
                             rows={5}
                             placeholder="Write a brief summary..."
-                            defaultValue={""}
                         />
                     </div>
                     <input className="btn submit" type="submit" defaultValue="ADD GAME" />

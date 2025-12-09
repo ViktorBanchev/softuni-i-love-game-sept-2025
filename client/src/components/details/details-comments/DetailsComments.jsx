@@ -1,28 +1,13 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router";
-import request from "../../../utils/requester.js";
-
 export default function DetailsComments({
-    refresh
+    comments
 }) {
-    const { gameId } = useParams();
-    const [comments, setComments] = useState([]);
-
-    useEffect(() => {
-        request(`/comments`)
-            .then(result => {
-                const gameComments = Object.values(result).filter(comment => comment.gameId === gameId);
-                setComments(gameComments);
-            })
-    }, [gameId, refresh])
-
     return (
         <div className="details-comments">
             <h2>Comments:</h2>
             <ul>
                 {comments.map(comment => (
-                    <li key={comment._id} className="comment">
-                        <p>{comment.author}: {comment.message}</p>
+                    <li style={comment.pending ? { color: 'gray' } : ''} key={comment._id} className="comment">
+                        <p>{comment.author.email}: {comment.message}</p>
                     </li>
                 ))}
             </ul>
