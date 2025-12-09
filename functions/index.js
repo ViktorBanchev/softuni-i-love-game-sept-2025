@@ -8,4 +8,4 @@ exports.server = onRequest((req, res) => {
     server.emit('request', req, res);
 })
 
-setGlobalOptions({ maxInstances: 1, region: 'europe-west4', co });
+setGlobalOptions({ maxInstances: 1, region: 'europe-west4' });
